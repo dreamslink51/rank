@@ -1,0 +1,27 @@
+%python sql
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas.io.sql as psql
+import pymssql
+import datetime as dt
+%matplotlib inline
+
+NEON = pymssql.connect(host=r'172.23.3.21',user=r'NeonPublicDS',password='349DJ5124T8544kXvdPr',database='NeonPublicDW')
+sql = """ 
+SELECT count([CustomerKey]) as TotalVisits
+      ,count(distinct [CustomerKey]) as DistinctVisits
+      ,C.[Casino]
+  FROM [NeonPublicDW].[dbo].[FactAttendance] TR 
+  left join [dbo].[DimCasino] C
+  on TR.CasinoKey = C.CasinoKey
+  where datekey between '20170827' and '20170926'
+  and TR.casinoKey in (41,45,52,55,59,66,68,72,74)
+  group by C.Casino
+  order by C.Casino 
+"""
+Visits= psql.read_sql_query(sql, NEON) 
+
+Visits
+Visits['TotalVisits'].sum()
