@@ -25,3 +25,28 @@ Visits= psql.read_sql_query(sql, NEON)
 
 Visits
 Visits['TotalVisits'].sum()
+
+
+######slot data from Jo###
+df = pd.read_csv('C:/Users/hui.yang/Downloads/SlotsMetreCombineexport.csv')
+df.Date_Key = pd.to_datetime(df.Date_Key,format='%d/%m/%Y') # To format date column as a date!
+df_Luton = df[(df['Casino'] == 'Luton') &  (df.Date_Key >= '2018-03-01' ) ] # plot time series over the 3 months for Luton only
+
+df_Luton.head(10)
+
+dfgroup = df_Luton.groupby([pd.Grouper(key='Date_Key',freq='w')])['MeteredCoinIn'].sum().reset_index()
+dfgroup
+x=dfgroup.iloc[:,0]
+y=dfgroup.iloc[:,1]
+plt.plot(x,y)
+#plt.show()
+plt.title('1 MeteredCoinIn')
+
+###plotting##
+plt.plot(df['x-coordinate'], df['y-coordinate'])
+plt.plot(df['x-coordinate'], df['y-coordinate2']) # add additional plots (in same frame)
+plt.xlabel('xlabel', fontsize=12)
+plt.ylabel('ylabel', fontsize=12)
+plt.legend(['legend1', 'legend2'])
+plt.title('title')
+plt.show() 
